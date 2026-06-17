@@ -43,7 +43,7 @@ async def button(update: Update, context: CallbackQueryHandler):
 
         elif num1 == num2 and num1 != num3 or num2 == num3 and num2 != num1 or num3 == num1 and num3 != num2:
             await query.message.reply_photo(
-                photo="https://chatgpt.com/backend-api/estuary/content?id=file_00000000cda072089d150efd0a25b39a&ts=494908&p=fs&cid=1&sig=72ee3457df474ebeb2f234a913faf5a3200decac00525efc3b92c99bbc7f56e0&v=0",
+                photo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXALfkocC1KZlZoeddzLlc5T6eFUBniCNV3FaxwGwpIfsp3xEUR4_Krck&s=10",
                 caption=f"вам выпала комбинация {num1} {num2} {num3} вы почти у цели, попробуйте снова!",
                 reply_markup = InlineKeyboardMarkup(keyboard)
             )
