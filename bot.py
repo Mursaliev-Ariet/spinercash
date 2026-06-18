@@ -12,7 +12,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("рулетка", callback_data="spin")]
     ]
     await update.message.reply_photo(
-        photo="https://chatgpt.com/backend-api/estuary/content?id=file_000000007a6c7208a2cce34601ef1ff1&ts=494932&p=fs&cid=1&sig=d7d5b8bd54c9315b10d61760eaa965114abc4e349722f21c6dc6e6e5399ed70b&v=0",
+        photo="90f9251c-20e9-4907-8f3b-d676437788d9.png",
         caption="привет! добро пожаловать в spinercash_bot, давай начнем игру",
         reply_markup=InlineKeyboardMarkup(keyboard)
     )
