@@ -12,7 +12,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("рулетка", callback_data="spin")]
     ]
     await update.message.reply_photo(
-        photo="90f9251c-20e9-4907-8f3b-d676437788d9.png",
+        photo="AgACAgIAAxkBAAORajNyvbMvHAHLJ9ayhg4etxJjuzYAAoEbaxu7rJlJk9siUonpj9MBAAMCAAN5AAM8BA",
         caption="привет! добро пожаловать в spinercash_bot, давай начнем игру",
         reply_markup=InlineKeyboardMarkup(keyboard)
     )
