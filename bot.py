@@ -4,7 +4,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 import os
-TOKEN = "8842127375:AAGeEiDRPwYLrC49EVlhDQ4uhnX8q12j5hA"
+TOKEN = os.getenv("TOKEN")
 
 
 REWARDS = [
