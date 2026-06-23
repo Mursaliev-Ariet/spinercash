@@ -76,19 +76,34 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if "balance" not in context.user_data:
             context.user_data["balance"] = 0
 
+        BASE_REWARD = 10
+
         if reward["value"] > 0:
-            win = reward["value"] * 10
+
+            win = reward["value"] * BASE_REWARD
+
+            # бонус карты
+            if "spinercash card" in context.user_data.get("boosts", []):
+                bonus = int(win * 0.1)
+                win += bonus
+
             context.user_data["balance"] += win
+
         else:
             win = 0
 
+        boost_text = ""
+
+        if "spinercash card" in context.user_data.get("boosts", []):
+            boost_text = "\n💳 Карта spinercash: +10%"
+
         await msg.edit_text(
             f"🎰 Результат: {reward['name']}\n"
-            f"💰 Выигрыш: {win} токенов\n"
+            f"💰 Выигрыш: {win} токенов"
+            f"{boost_text}\n"
             f"📊 Баланс: {context.user_data['balance']}",
-            reply_markup = InlineKeyboardMarkup(keyboard)
+            reply_markup=InlineKeyboardMarkup(keyboard)
         )
-        return
     elif data == "start":
 
         keyboard = [
