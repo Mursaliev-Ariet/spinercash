@@ -1,9 +1,19 @@
 import random
+import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 import os
-TOKEN = os.getenv("TOKEN")
+TOKEN = "8842127375:AAGeEiDRPwYLrC49EVlhDQ4uhnX8q12j5hA"
+
+
+REWARDS = [
+    {"name": "💥 Джекпот x10", "value": 10, "chance": 5},
+    {"name": "🔥 x3", "value": 3, "chance": 15},
+    {"name": "✨ x2", "value": 2, "chance": 25},
+    {"name": "❌ проигрыш", "value": 0, "chance": 55},
+]
+
 
 boosts = {
     "Карта spinercash" : {
@@ -12,6 +22,17 @@ boosts = {
         "price" : 250
     }
 }
+
+
+def get_reward():
+    total = sum(r["chance"] for r in REWARDS)
+    roll = random.randint(1, total)
+
+    current = 0
+    for r in REWARDS:
+        current += r["chance"]
+        if roll <= current:
+            return r
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     keyboard = [
@@ -37,44 +58,37 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if "boosts" not in context.user_data:
         context.user_data["boosts"] = []
     if data == "spin":
-        num1 = random.randint(1,9)
-        num2 = random.randint(1,9)
-        num3 = random.randint(1,9)
-
+        msg = await query.message.reply_text("🎰 Крутим барабан...")
         keyboard = [
-            [InlineKeyboardButton("Попробовать снова", callback_data="spin")],
-            [InlineKeyboardButton("⬅️ Назад", callback_data="start")]
+            [InlineKeyboardButton("крутить еще", callback_data="spin")],
         ]
-        if num1 != num2 and num1 != num3 and num2 != num3:
-            await query.message.reply_photo(
-                photo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_evFF4YgfBdb2LrX4CrQxax3TxNSsvwd8CvQvHljhZw&s=10",
-                caption=f"Неудача, вам выпала комбинация {num1} {num2} {num3} попробуйте снова чтобы выбить куш",
-                reply_markup = InlineKeyboardMarkup(keyboard)
-            )
+        keyboard.append([InlineKeyboardButton("назад", callback_data="start")])
 
-        elif num1 == num2 and num1 != num3 or num2 == num3 and num2 != num1 or num3 == num1 and num3 != num2:
-            await query.message.reply_photo(
-                photo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXALfkocC1KZlZoeddzLlc5T6eFUBniCNV3FaxwGwpIfsp3xEUR4_Krck&s=10",
-                caption=f"вам выпала комбинация {num1} {num2} {num3} вы почти у цели, попробуйте снова!",
-                reply_markup = InlineKeyboardMarkup(keyboard)
-            )
+        frames = ["🎰|", "🎰/", "🎰--", "🎰\\", "🎰|"]
 
+        for f in frames:
+            await msg.edit_text(f"Крутится... {f}")
+            await asyncio.sleep(0.4)
 
-        elif num1 == num2 == num3:
-            if "spinercash card" in context.user_data["boosts"]:
-                context.user_data["balance"] += 55
-            else:
-                context.user_data["balance"] += 50
-            await query.message.reply_photo(
-                photo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKlrnKemS8QkJB6_NwFseFnVtKPYuGlAHi_sdQASQLCbgU9kHmc2HuWLA&s=10",
-                caption=(
-                    f"🎉 Поздравляем!\n"
-                    f"Вам выпала комбинация {num1} {num2} {num3}\n"
-                    f"Вы выиграли джекпот и получили 50 токенов!\n"
-                    f"Ваш текущий баланс: {context.user_data['balance']}"
-                ),
-                reply_markup=InlineKeyboardMarkup(keyboard)
-            )
+        reward = get_reward()
+
+        # баланс
+        if "balance" not in context.user_data:
+            context.user_data["balance"] = 0
+
+        if reward["value"] > 0:
+            win = reward["value"] * 10
+            context.user_data["balance"] += win
+        else:
+            win = 0
+
+        await msg.edit_text(
+            f"🎰 Результат: {reward['name']}\n"
+            f"💰 Выигрыш: {win} токенов\n"
+            f"📊 Баланс: {context.user_data['balance']}",
+            reply_markup = InlineKeyboardMarkup(keyboard)
+        )
+        return
     elif data == "start":
 
         keyboard = [
