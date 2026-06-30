@@ -5,16 +5,12 @@ from telegram.ext import Application, CommandHandler, CallbackQueryHandler, Cont
 
 import os
 TOKEN = os.getenv("TOKEN")
-
-
 REWARDS = [
     {"name": "💥 Джекпот x10", "value": 10, "chance": 5},
     {"name": "🔥 x3", "value": 3, "chance": 15},
     {"name": "✨ x2", "value": 2, "chance": 25},
     {"name": "❌ проигрыш", "value": 0, "chance": 55},
 ]
-
-
 boosts = {
     "Карта spinercash" : {
         "name" : "spinercash card",
@@ -22,8 +18,6 @@ boosts = {
         "price" : 250
     }
 }
-
-
 def get_reward():
     total = sum(r["chance"] for r in REWARDS)
     roll = random.randint(1, total)
